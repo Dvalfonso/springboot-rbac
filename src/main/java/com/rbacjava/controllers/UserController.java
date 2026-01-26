@@ -1,11 +1,13 @@
 package com.rbacjava.controllers;
 
+import com.rbacjava.models.dao.User;
 import com.rbacjava.models.dto.UserRequestDto;
 import com.rbacjava.models.dto.UserResponseDto;
 import com.rbacjava.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/users")
 @RestController
@@ -29,5 +31,15 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.findById(id);
+    }
+
+    @PutMapping("/id")
+    public UserResponseDto updateEmail(@RequestBody Long id, String newEmail) {
+        return userService.updateEmail(id, newEmail);
+    }
+
+    @DeleteMapping("/id")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
     }
 }

@@ -51,6 +51,22 @@ public class UserService {
         return toResponseDto(user);
     }
 
+    public UserResponseDto updateEmail(Long id, String newEmail) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("No user with that id"));
+
+        user.setEmail(newEmail);
+
+        User updatedUser = userRepository.save(user);
+        return toResponseDto(updatedUser);
+    }
+
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found");
+        }
+        userRepository.deleteById(id);
+    }
+
     private UserResponseDto toResponseDto(User user) {
         return new UserResponseDto(
                 user.getId(),
