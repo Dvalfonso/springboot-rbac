@@ -20,13 +20,21 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Permission read = permRepo.save(new Permission("USER_READ"));
-        Permission write = permRepo.save(new Permission("USER_WRITE"));
+        Permission read = permRepo.findByName("USER_READ")
+                .orElseGet(() -> permRepo.save(new Permission("USER_READ")));
+        Permission write = permRepo.findByName("USER_WRITE")
+                .orElseGet(() -> permRepo.save(new Permission("USER_WRITE")));
 
-        Role user = new Role("ROLE_USER");
+        Role user = roleRepo.findByName("ROLE_USER")
+                .orElseGet(() -> new Role("ROLE_USER"));
+
+        user.getPermissions().clear();
         user.getPermissions().add(read);
 
-        Role admin = new Role("ROLE_ADMIN");
+        Role admin = roleRepo.findByName("ROLE_ADMIN")
+                .orElseGet(() -> new Role("ROLE_ADMIN"));
+
+        admin.getPermissions().clear();
         admin.getPermissions().addAll(Set.of(read, write));
 
         roleRepo.save(user);

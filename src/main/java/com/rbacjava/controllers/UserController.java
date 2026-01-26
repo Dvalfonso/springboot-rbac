@@ -1,19 +1,33 @@
 package com.rbacjava.controllers;
 
+import com.rbacjava.models.dto.UserRequestDto;
+import com.rbacjava.models.dto.UserResponseDto;
 import com.rbacjava.services.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RequestMapping("/users")
 @RestController
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String testController() {
-        return "hello world!";
+    @PostMapping()
+    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+        return userService.createUser(userRequestDto);
+    }
+
+    @GetMapping("")
+    public List<UserResponseDto> getUsers() {
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public UserResponseDto getUserById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 }
