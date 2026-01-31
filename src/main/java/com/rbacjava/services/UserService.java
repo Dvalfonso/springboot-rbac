@@ -51,10 +51,11 @@ public class UserService {
         return toResponseDto(user);
     }
 
-    public UserResponseDto updateEmail(Long id, String newEmail) {
+    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("No user with that id"));
 
-        user.setEmail(newEmail);
+        user.setEmail(userRequestDto.getEmail());
+        user.setUsername(userRequestDto.getUsername());
 
         User updatedUser = userRepository.save(user);
         return toResponseDto(updatedUser);

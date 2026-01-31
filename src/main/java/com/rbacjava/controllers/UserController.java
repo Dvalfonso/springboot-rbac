@@ -33,12 +33,12 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PutMapping("/id")
-    public UserResponseDto updateEmail(@RequestBody Long id, String newEmail) {
-        return userService.updateEmail(id, newEmail);
+    @PutMapping("/{id}")
+    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
+        return userService.updateUser(id, userRequestDto);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
     }
