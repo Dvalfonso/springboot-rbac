@@ -4,6 +4,7 @@ import com.rbacjava.models.dao.User;
 import com.rbacjava.models.dto.UserRequestDto;
 import com.rbacjava.models.dto.UserResponseDto;
 import com.rbacjava.services.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class UserController {
         return userService.createUser(userRequestDto);
     }
 
+    @PreAuthorize("hasAuthority('USER_READ')")
     @GetMapping("")
     public List<UserResponseDto> getUsers() {
         return userService.findAll();

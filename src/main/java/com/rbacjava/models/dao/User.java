@@ -21,7 +21,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(unique = false, nullable = false)
     private String username;
-    @Column(unique = false, nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
     @Column(unique = false, nullable = false)
     private String password;
@@ -34,12 +34,25 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
+    // Para que el subject del token sea el email
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .flatMap(r -> r.getPermissions().stream())
-                .map(p -> new SimpleGrantedAuthority(p.getName()))
-                .toList();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+
+            for (Permission perm : role.getPermissions()) {
+                authorities.add(new SimpleGrantedAuthority(perm.getName()));
+            }
+        }
+
+        return authorities;
     }
 
     @Override
