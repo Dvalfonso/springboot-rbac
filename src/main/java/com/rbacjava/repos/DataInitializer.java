@@ -31,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
                 .orElseGet(() -> new Role("ROLE_USER"));
 
         user.getPermissions().clear();
-        user.getPermissions().add(read);
+        user.getPermissions().addAll(Set.of(read, update));
 
         Role admin = roleRepo.findByName("ROLE_ADMIN")
                 .orElseGet(() -> new Role("ROLE_ADMIN"));

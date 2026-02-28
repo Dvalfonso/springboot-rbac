@@ -36,12 +36,16 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @PreAuthorize(
+            "hasAuthority('USER_UPDATE') and " +
+                    "(#id == authentication.principal.id or hasAuthority('ADMIN_UPDATE'))"
+    )
     @PutMapping("/{id}")
     public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
         return userService.updateUser(id, userRequestDto);
     }
 
-
+    @PreAuthorize("hasAuthority('USER_WRITE')")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
