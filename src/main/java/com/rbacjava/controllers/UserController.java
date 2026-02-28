@@ -30,6 +30,7 @@ public class UserController {
         return userService.findAll();
     }
 
+    @PreAuthorize("hasAuthority('USER_READ')")
     @GetMapping("/{id}")
     public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.findById(id);
@@ -39,6 +40,7 @@ public class UserController {
     public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
         return userService.updateUser(id, userRequestDto);
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {

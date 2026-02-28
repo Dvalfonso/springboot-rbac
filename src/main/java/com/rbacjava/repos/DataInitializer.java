@@ -24,6 +24,8 @@ public class DataInitializer implements CommandLineRunner {
                 .orElseGet(() -> permRepo.save(new Permission("USER_READ")));
         Permission write = permRepo.findByName("USER_WRITE")
                 .orElseGet(() -> permRepo.save(new Permission("USER_WRITE")));
+        Permission update = permRepo.findByName("USER_UPDATE")
+                .orElseGet(() -> permRepo.save(new Permission("USER_UPDATE")));
 
         Role user = roleRepo.findByName("ROLE_USER")
                 .orElseGet(() -> new Role("ROLE_USER"));
@@ -35,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
                 .orElseGet(() -> new Role("ROLE_ADMIN"));
 
         admin.getPermissions().clear();
-        admin.getPermissions().addAll(Set.of(read, write));
+        admin.getPermissions().addAll(Set.of(read, write, update));
 
         roleRepo.save(user);
         roleRepo.save(admin);
