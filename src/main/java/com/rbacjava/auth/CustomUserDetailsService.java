@@ -1,5 +1,7 @@
 package com.rbacjava.auth;
 
+import com.rbacjava.models.dao.User;
+import com.rbacjava.models.dao.UserDetailsImplementation;
 import com.rbacjava.repos.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +18,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepo.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new UserDetailsImplementation(user);
     }
 }

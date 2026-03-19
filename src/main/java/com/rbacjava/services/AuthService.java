@@ -3,6 +3,7 @@ package com.rbacjava.services;
 import com.rbacjava.auth.jwt.JwtService;
 import com.rbacjava.models.dao.Role;
 import com.rbacjava.models.dao.User;
+import com.rbacjava.models.dao.UserDetailsImplementation;
 import com.rbacjava.models.dto.AuthResponse;
 import com.rbacjava.models.dto.RegisterRequestDto;
 import com.rbacjava.repos.RoleRepository;
@@ -44,7 +45,9 @@ public class AuthService {
 
         userRepo.save(user);
 
-        String token = jwtService.generateToken(user);
+        UserDetailsImplementation userDetailsImplementation = new UserDetailsImplementation(user);
+
+        String token = jwtService.generateToken(userDetailsImplementation);
         return new AuthResponse(token);
     }
 }
