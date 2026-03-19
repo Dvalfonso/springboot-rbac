@@ -16,11 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -60,5 +58,29 @@ public class UserServiceTest {
         Assertions.assertEquals("testname", result.getUsername());
         Assertions.assertTrue(result.getRoles().contains("ROLE_USER"));
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void createUser_throwsWhenUsernameAlreadyExists() {
+        UserRequestDto dto = new UserRequestDto("david@mail.com", "david", "password123");
+
+        when(userRepository.existsByUsername("david")).thenReturn(true);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            userService.createUser(dto);
+        });
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void not_found_role() {
+        UserRequestDto dto = new UserRequestDto("david@mail.com", "david", "password123");
+        when(userRepository.existsByUsername("david")).thenReturn(false);
+        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            userService.createUser(dto);
+        });
     }
 }
