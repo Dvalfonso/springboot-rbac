@@ -134,4 +134,21 @@ public class UserServiceTest {
 
         verify(userRepository).save(any(User.class));
     }
+
+    @Test
+    void deleteById_user_not_found() {
+        when(userRepository.existsById(anyLong())).thenReturn(false);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            userService.deleteById(10L);
+        });
+    }
+
+    @Test
+    void deleteById_succesfully() {
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+
+        userService.deleteById(10L);
+
+        verify(userRepository).deleteById(10L);
+    }
 }
