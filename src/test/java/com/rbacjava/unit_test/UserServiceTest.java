@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -82,5 +84,54 @@ public class UserServiceTest {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             userService.createUser(dto);
         });
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void not_found_by_id() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            userService.findById(10L);
+        });
+    }
+
+    @Test
+    void user_found() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(savedUser));
+
+        UserResponseDto dto = userService.findById(10L);
+
+        Assertions.assertSame(dto.getEmail(), savedUser.getEmail());
+        Assertions.assertSame(dto.getUsername(), savedUser.getUsername());
+
+        for (Role r : savedUser.getRoles()) {
+            Assertions.assertTrue(dto.getRoles().contains(r.getName()));
+        }
+    }
+
+    @Test
+    void update_user_not_found_id() {
+        UserRequestDto dto = new UserRequestDto(savedUser.getEmail(), savedUser.getUsername(), savedUser.getPassword());
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            userService.updateUser(10L, dto);
+        });
+    }
+
+    @Test
+    void updte_user_succesfully() {
+        UserRequestDto dto = new UserRequestDto("newEmail@mail.com", "newUsername", "same password");
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(savedUser));
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        UserResponseDto response = userService.updateUser(1L, dto);
+
+        Assertions.assertSame(response.getEmail(), dto.getEmail());
+        Assertions.assertSame(response.getUsername(), dto.getUsername());
+
+        verify(userRepository).save(any(User.class));
     }
 }
