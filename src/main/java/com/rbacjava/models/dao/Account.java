@@ -38,4 +38,12 @@ public class Account {
         this.balance = BigDecimal.ZERO;
         this.createdAt = LocalDateTime.now();
     }
+
+    public void deposit(BigDecimal amount) {
+        this.balance = this.balance.add(amount);
+    }
+
+    public void withdraw(BigDecimal amount) {
+        this.balance = this.balance.subtract(amount);
+    }
 }
