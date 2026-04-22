@@ -34,6 +34,10 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
     // Para usarlo en UserDetailsImplementation
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
