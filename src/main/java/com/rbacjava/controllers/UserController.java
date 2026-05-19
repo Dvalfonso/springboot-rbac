@@ -24,7 +24,7 @@ public class UserController {
         return userService.createUser(userRequestDto);
     }
 
-    @PreAuthorize("hasAuthority('USER_READ')")
+    @PreAuthorize("hasAuthority('USER_READ_ALL')")
     @GetMapping("")
     public List<UserResponseDto> getUsers() {
         return userService.findAll();
@@ -45,7 +45,7 @@ public class UserController {
         return userService.updateUser(id, userRequestDto);
     }
 
-    @PreAuthorize("hasAuthority('USER_WRITE')")
+    @PreAuthorize("hasAuthority('USER_DELETE')")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
