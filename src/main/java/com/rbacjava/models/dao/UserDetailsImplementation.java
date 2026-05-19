@@ -20,6 +20,7 @@ public class UserDetailsImplementation implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         return user.getAuthorities();
     }
 

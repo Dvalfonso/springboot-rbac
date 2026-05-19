@@ -2,6 +2,9 @@ package com.rbacjava.models.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +14,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -40,6 +45,8 @@ public class User {
 
     // Para usarlo en UserDetailsImplementation
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("=== ROLES EN GETAUTHORITIES: " + roles);
+
         Set<GrantedAuthority> authorities = new HashSet<>();
 
         for (Role role : roles) {
@@ -49,7 +56,7 @@ public class User {
                 authorities.add(new SimpleGrantedAuthority(perm.getName()));
             }
         }
-
+        System.out.println("=== AUTHORITIES RESULTADO: " + authorities);
         return authorities;
     }
 }
