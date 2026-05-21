@@ -1,12 +1,18 @@
 package com.rbacjava.models.dao;
 
+import com.rbacjava.cbu.CbuGenerator;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "accounts")
+@Table(name = "accounts", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_account_cbu", columnNames = "cbu")})
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +26,10 @@ public class Account {
     )
     private User user;
 
+    // Se genera al persistir
+    @Column(name = "cbu", length = 22, nullable = false, updatable = false)
+    private String cbu;
+
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
 
@@ -27,7 +37,7 @@ public class Account {
     @Column(nullable = false)
     private AccountType type;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public Account() {}
@@ -37,6 +47,18 @@ public class Account {
         this.type = type;
         this.balance = BigDecimal.ZERO;
         this.createdAt = LocalDateTime.now();
+        this.cbu = CbuGenerator.generate();
+    }
+
+    // Es prePersist porque el id no esta en la bd todavia
+    @PrePersist
+    private void onPrePersist() {
+        if (this.cbu == null) {
+            this.cbu = CbuGenerator.generate();
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 
     public void deposit(BigDecimal amount) {
@@ -45,5 +67,11 @@ public class Account {
 
     public void withdraw(BigDecimal amount) {
         this.balance = this.balance.subtract(amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{id=" + id + ", cbu='" + cbu + "', type=" + type
+                + ", balance=" + balance + "}";
     }
 }
