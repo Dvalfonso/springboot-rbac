@@ -2,8 +2,6 @@ package com.rbacjava.controllers;
 
 import com.rbacjava.models.dto.AccountRequestDto;
 import com.rbacjava.models.dto.AccountResponseDto;
-import com.rbacjava.models.dto.UserRequestDto;
-import com.rbacjava.models.dto.UserResponseDto;
 import com.rbacjava.services.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<AccountResponseDto> createUser(@RequestBody AccountRequestDto accountRequestDto) {
         AccountResponseDto accountResponseDto = accountService.createAccount(accountRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponseDto);

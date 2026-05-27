@@ -22,12 +22,14 @@ public class AccountService {
     }
 
     public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
+        System.out.println(accountRequestDto.userId());
         User user = userRepository.findById(accountRequestDto.userId())
                 .orElseThrow(() ->
                         new UserNotFoundException(accountRequestDto.userId()));
 
         Account account = new Account(user, accountRequestDto.type());
         Account savedAccount = accountRepository.save(account);
+
         return new AccountResponseDto(new UserResponseDto(user), accountRequestDto.type(), savedAccount.getCreatedAt());
     }
 }
