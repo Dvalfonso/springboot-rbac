@@ -18,8 +18,8 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AccountResponseDto> createUser(@RequestBody AccountRequestDto accountRequestDto) {
+    @PostMapping
+    public ResponseEntity<AccountResponseDto> createAccount(@RequestBody AccountRequestDto accountRequestDto) {
         AccountResponseDto accountResponseDto = accountService.createAccount(accountRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountResponseDto);
     }
@@ -32,9 +32,24 @@ public class AccountController {
         return ResponseEntity.ok(accountResponseDto);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<AccountResponseDto>> getAccounts() {
         List<AccountResponseDto> accountResponseDtoList = accountService.getAccounts();
         return ResponseEntity.ok(accountResponseDtoList);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AccountResponseDto> updateAccount(@RequestBody AccountRequestDto accountRequestDto) {
+
+        AccountResponseDto updatedAccount = accountService.updateAccount(accountRequestDto);
+
+        return ResponseEntity.ok(updatedAccount);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

@@ -58,4 +58,18 @@ public class AccountService {
                 ))
                 .toList();
     }
+
+    public AccountResponseDto updateAccount(AccountRequestDto accountRequestDto) {
+        User user = userRepository.findById(accountRequestDto.userId()).orElseThrow(
+                () -> new UserNotFoundException(accountRequestDto.userId())
+        );
+        Account account = new Account(user, accountRequestDto.type());
+        Account savedAccount = accountRepository.save(account);
+
+        return new AccountResponseDto(new UserResponseDto(user), accountRequestDto.type(), savedAccount.getCreatedAt(), savedAccount.getCbu());
+    }
+
+    public void deleteAccount(Long id) {
+        userRepository.deleteById(id);
+    }
 }
