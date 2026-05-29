@@ -70,6 +70,6 @@ public class AccountService {
     }
 
     public void deleteAccount(Long id) {
-        userRepository.deleteById(id);
+        accountRepository.deleteById(id);
     }
 }
